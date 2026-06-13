@@ -1,26 +1,93 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  /* Palette drawn from the band logo: aged gold, bronze and parchment cream */
+  --background: #140e06;
+  --foreground: #f3e9d2;
+  --accent: #c89b3c;
+  --accent-2: #8a5a2b;
+  --accent-3: #ecdcb4;
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --color-accent: var(--accent);
+  --color-accent-2: var(--accent-2);
+  --color-accent-3: var(--accent-3);
+  --font-sans: var(--font-heebo);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+html {
+  scroll-behavior: smooth;
+  /* Slightly smaller global scale — every rem-based size shrinks with this */
+  font-size: 87.5%;
 }
 
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-heebo), Arial, Helvetica, sans-serif;
+  overflow-x: hidden;
+}
+
+::selection {
+  background: var(--accent);
+  color: #1a130a;
+}
+
+/* Shimmering gold gradient text, like the gilded logo lacework */
+.text-psy {
+  background: linear-gradient(
+    100deg,
+    #e8c87a 0%,
+    #c89b3c 30%,
+    #f7ecd0 55%,
+    #a8762e 80%,
+    #e8c87a 100%
+  );
+  background-size: 200% 200%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  animation: psy-shift 8s ease-in-out infinite alternate;
+}
+
+@keyframes psy-shift {
+  0% {
+    background-position: 0% 50%;
+  }
+  100% {
+    background-position: 100% 50%;
+  }
+}
+
+/* Slow rotation for ornamental mandala rings */
+@keyframes spin-slow {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.animate-spin-slow {
+  animation: spin-slow 45s linear infinite;
+}
+
+.animate-spin-slower {
+  animation: spin-slow 70s linear infinite reverse;
+}
+
+/* Floating glow orbs */
+@keyframes float-slow {
+  0%,
+  100% {
+    transform: translate(0, 0);
+  }
+  50% {
+    transform: translate(30px, -40px);
+  }
+}
+
+.animate-float-slow {
+  animation: float-slow 14s ease-in-out infinite;
 }
