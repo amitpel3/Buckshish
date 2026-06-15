@@ -1,4 +1,5 @@
 import Hero from "./components/Hero";
+import LanguageSwitcher from "./components/LanguageSwitcher";
 import PatternBackground from "./components/PatternBackground";
 import {
   About,
@@ -12,6 +13,7 @@ export default function Home() {
   return (
     <main>
       <PatternBackground />
+      <LanguageSwitcher />
       <Hero />
       <About />
       <Banner />

@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Berkshire_Swash, Heebo, Suez_One } from "next/font/google";
 import "./globals.css";
 import { siteConfig } from "@/lib/config";
+import { LanguageProvider } from "./components/LanguageProvider";
 
 const heebo = Heebo({
   variable: "--font-heebo",
@@ -41,6 +42,11 @@ export const metadata: Metadata = {
     "Progressive Rock",
     "Psychedelic",
     "Instrumental band",
+    "להקת מוזיקה נהריה",
+    "הרכב מוזיקה נהריה",
+    "להקה מהצפון",
+    `${siteConfig.bandName} ${siteConfig.location}`,
+    `Buckshish ${siteConfig.locationEn}`,
   ],
   alternates: { canonical: "/" },
   icons: {
@@ -75,6 +81,14 @@ const jsonLd = {
   genre: siteConfig.genres,
   email: siteConfig.email,
   inLanguage: "he",
+  foundingLocation: {
+    "@type": "Place",
+    name: siteConfig.location,
+  },
+  homeLocation: {
+    "@type": "Place",
+    name: siteConfig.location,
+  },
   member: siteConfig.members.map((name) => ({
     "@type": "Person",
     name,
@@ -94,7 +108,7 @@ export default function RootLayout({
       className={`${heebo.variable} ${suezOne.variable} ${berkshire.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col">
-        {children}
+        <LanguageProvider>{children}</LanguageProvider>
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}

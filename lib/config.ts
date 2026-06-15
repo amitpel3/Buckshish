@@ -3,6 +3,8 @@ export const siteConfig = {
   bandNameEn: "Buckshish",
   siteUrl: "https://buckshish.com",
   tagline: "הרכב אינסטרומנטלי המבצע מוזיקה מקורית המשלבת רוק מתקדם, מוזיקת עולם והשפעות אלקטרוניות פסיכדליות.",
+  location: "נהריה",
+  locationEn: "Nahariya",
   email: "buckshishmusic@gmail.com",
   genres: ["Progressive Rock", "World Music", "Psychedelic Electronic", "Instrumental"],
   members: [
