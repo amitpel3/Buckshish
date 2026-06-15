@@ -4,7 +4,7 @@ export const translations = {
   he: {
     dir: "rtl" as const,
     // Hero
-    heroEyebrow: "Instrumental · Psychedelic · World",
+    heroEyebrow: "אינסטרומנטלי · פסיכדלי · מוזיקת עולם",
     bandName: "בקשיש",
     bandNameRoman: "Buckshish",
     heroDescription:

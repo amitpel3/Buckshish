@@ -124,9 +124,11 @@ export default function Hero() {
           <h1 className="font-[family-name:var(--font-display)] text-6xl sm:text-7xl">
             <span className="text-psy">{t.bandName}</span>
           </h1>
-          <p className="mt-3 font-[family-name:var(--font-deco)] text-3xl text-accent sm:text-4xl">
-            {t.bandNameRoman}
-          </p>
+          {lang === "he" && (
+            <p className="mt-3 font-[family-name:var(--font-deco)] text-3xl text-accent sm:text-4xl">
+              {t.bandNameRoman}
+            </p>
+          )}
           <div
             className="mx-auto mt-5 flex max-w-xs items-center gap-3 text-accent"
             aria-hidden
