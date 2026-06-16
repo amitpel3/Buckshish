@@ -1,7 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { BANNER_IMAGE, GALLERY_IMAGES, MEMBERS, SOCIALS } from "../data";
 import { useLang } from "./LanguageProvider";
 
@@ -52,7 +52,7 @@ export function About() {
       </motion.p>
       <motion.p
         {...fadeUp}
-        className="mt-4 text-center text-base text-foreground/50"
+        className="mt-4 text-center text-base text-foreground/75"
       >
         {t.aboutLocation}
       </motion.p>
@@ -111,7 +111,7 @@ export function Members() {
               <h3 className="mt-4 font-[family-name:var(--font-display)] text-xl">
                 {localizedName}
               </h3>
-              <p className="mt-1 text-sm text-foreground/60">{localizedRole}</p>
+              <p className="mt-1 text-sm text-foreground/80">{localizedRole}</p>
             </motion.div>
           );
         })}
@@ -122,7 +122,23 @@ export function Members() {
 
 export function Gallery() {
   const { t } = useLang();
-  const [selected, setSelected] = useState<string | null>(null);
+  const [selected, setSelected] = useState<number | null>(null);
+
+  // Esc and arrow-key support inside the lightbox dialog
+  useEffect(() => {
+    if (selected === null) return;
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") setSelected(null);
+      else if (e.key === "ArrowRight")
+        setSelected((s) => (s === null ? s : (s + 1) % GALLERY_IMAGES.length));
+      else if (e.key === "ArrowLeft")
+        setSelected((s) =>
+          s === null ? s : (s - 1 + GALLERY_IMAGES.length) % GALLERY_IMAGES.length,
+        );
+    };
+    document.addEventListener("keydown", onKey);
+    return () => document.removeEventListener("keydown", onKey);
+  }, [selected]);
 
   return (
     <section id="gallery" className="mx-auto max-w-5xl px-4 py-16">
@@ -135,7 +151,7 @@ export function Gallery() {
             whileInView={{ opacity: 1, scale: 1 }}
             viewport={{ once: true, margin: "-40px" }}
             transition={{ duration: 0.4, delay: (i % 5) * 0.08 }}
-            onClick={() => setSelected(src)}
+            onClick={() => setSelected(i)}
             className="group relative aspect-square overflow-hidden rounded-xl border border-white/10"
             aria-label={t.galleryItemAria(i + 1)}
           >
@@ -150,21 +166,28 @@ export function Gallery() {
         ))}
       </div>
 
-      {selected && (
+      {selected !== null && (
         <div
           className="fixed inset-0 z-50 flex items-center justify-center bg-black/85 p-6 backdrop-blur-sm"
           onClick={() => setSelected(null)}
           role="dialog"
+          aria-modal="true"
           aria-label={t.lightboxAria}
         >
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
-            src={selected}
+            src={GALLERY_IMAGES[selected]}
             alt={t.lightboxAlt}
             className="w-[min(85vw,480px)] max-h-[80vh] rounded-2xl object-contain shadow-[0_0_60px_rgba(245,166,35,0.3)]"
           />
           <button
-            className="absolute top-6 left-6 text-3xl text-white/70 transition hover:text-white"
+            type="button"
+            autoFocus
+            onClick={(e) => {
+              e.stopPropagation();
+              setSelected(null);
+            }}
+            className="absolute top-6 left-6 rounded-full bg-black/50 px-3 py-1 text-3xl leading-none text-white transition hover:text-accent"
             aria-label={t.closeAria}
           >
             ✕
@@ -187,7 +210,7 @@ const SOCIAL_KEYS = [
 export function Contact() {
   const { t } = useLang();
   return (
-    <section id="contact" className="mx-auto max-w-4xl px-4 py-16">
+    <footer id="contact" className="mx-auto max-w-4xl px-4 py-16">
       <SectionTitle>{t.contactTitle}</SectionTitle>
       <motion.div {...fadeUp} className="grid gap-4 sm:grid-cols-2">
         {SOCIALS.map((s, i) => (
@@ -196,31 +219,39 @@ export function Contact() {
             href={s.href}
             target={s.href.startsWith("mailto:") ? undefined : "_blank"}
             rel="noopener noreferrer"
-            className="flex items-center justify-between rounded-2xl border border-white/10 bg-white/[0.04] px-6 py-5 transition hover:border-accent/60 hover:bg-accent/5"
+            className="flex items-center justify-between rounded-2xl border border-accent/30 bg-white/[0.04] px-6 py-5 transition hover:border-accent hover:bg-accent/5"
           >
             <span className="text-lg font-bold">
               {t.socialLabels[SOCIAL_KEYS[i]]}
             </span>
-            <span className="text-sm text-foreground/60" dir="ltr">
+            <span className="text-sm text-foreground/85" dir="ltr">
               {s.handle}
             </span>
           </a>
         ))}
       </motion.div>
-      <p className="mt-16 text-center text-sm text-foreground/40">
+      <nav aria-label="Footer links" className="mt-12 text-center">
+        <a
+          href="/accessibility"
+          className="text-sm text-accent/80 underline-offset-2 hover:text-accent hover:underline"
+        >
+          {t.a11yStatementLink}
+        </a>
+      </nav>
+      <p className="mt-6 text-center text-sm text-foreground/70">
         {t.copyright} © {new Date().getFullYear()}
       </p>
-      <p className="mt-2 text-center text-xs text-foreground/30" dir="ltr">
+      <p className="mt-2 text-center text-xs text-foreground/60" dir="ltr">
         {t.madeBy}{" "}
         <a
           href="https://siteforyou.org"
           target="_blank"
           rel="noopener noreferrer"
-          className="text-accent/60 transition hover:text-accent"
+          className="text-accent hover:underline"
         >
           SiteForYou
         </a>
       </p>
-    </section>
+    </footer>
   );
 }

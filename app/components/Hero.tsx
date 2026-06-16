@@ -1,25 +1,75 @@
 "use client";
 
+import { useEffect, useRef, useState } from "react";
 import { SOCIALS } from "../data";
 import { useLang } from "./LanguageProvider";
 
-/** Muted looping video background for the hero. */
+/** Muted looping video background with a user-controllable pause button. */
 function BackgroundVideo() {
+  const { t } = useLang();
+  const videoRef = useRef<HTMLVideoElement>(null);
+  const [playing, setPlaying] = useState(true);
+
+  // Honor the OS-level prefers-reduced-motion setting on first paint
+  useEffect(() => {
+    const mql = window.matchMedia("(prefers-reduced-motion: reduce)");
+    if (mql.matches && videoRef.current) {
+      videoRef.current.pause();
+      setPlaying(false);
+    }
+  }, []);
+
+  const toggle = () => {
+    const v = videoRef.current;
+    if (!v) return;
+    if (v.paused) {
+      void v.play();
+      setPlaying(true);
+    } else {
+      v.pause();
+      setPlaying(false);
+    }
+  };
+
   return (
     <div
       className="absolute inset-0 overflow-hidden [mask-image:linear-gradient(to_bottom,black_60%,transparent_99%)]"
-      aria-hidden
     >
       <video
+        ref={videoRef}
         className="h-full w-full object-cover"
         src="/video/buckshish-hero.mp4"
         autoPlay
         muted
         loop
         playsInline
+        aria-hidden
       />
-      <div className="absolute inset-0 bg-gradient-to-b from-background/60 via-accent-2/15 to-background" />
-      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,transparent_40%,rgba(20,14,6,0.75)_100%)]" />
+      <div
+        className="absolute inset-0 bg-gradient-to-b from-background/60 via-accent-2/15 to-background"
+        aria-hidden
+      />
+      <div
+        className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,transparent_40%,rgba(20,14,6,0.75)_100%)]"
+        aria-hidden
+      />
+      <button
+        type="button"
+        onClick={toggle}
+        aria-label={playing ? t.pauseVideoAria : t.playVideoAria}
+        className="absolute bottom-4 right-4 z-20 flex h-9 w-9 items-center justify-center rounded-full border border-accent/50 bg-black/55 text-accent/90 backdrop-blur transition hover:border-accent hover:text-accent"
+      >
+        {playing ? (
+          <svg width="14" height="14" viewBox="0 0 14 14" fill="currentColor" aria-hidden>
+            <rect x="2" y="1.5" width="3.5" height="11" rx="0.6" />
+            <rect x="8.5" y="1.5" width="3.5" height="11" rx="0.6" />
+          </svg>
+        ) : (
+          <svg width="14" height="14" viewBox="0 0 14 14" fill="currentColor" aria-hidden>
+            <path d="M3.5 2v10l8-5z" />
+          </svg>
+        )}
+      </button>
     </div>
   );
 }

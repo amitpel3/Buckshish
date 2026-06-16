@@ -3,6 +3,9 @@ import { Berkshire_Swash, Heebo, Suez_One } from "next/font/google";
 import "./globals.css";
 import { siteConfig } from "@/lib/config";
 import { LanguageProvider } from "./components/LanguageProvider";
+import { AccessibilityProvider } from "./components/AccessibilityProvider";
+import AccessibilityWidget from "./components/AccessibilityWidget";
+import SkipLink from "./components/SkipLink";
 
 const heebo = Heebo({
   variable: "--font-heebo",
@@ -108,7 +111,13 @@ export default function RootLayout({
       className={`${heebo.variable} ${suezOne.variable} ${berkshire.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col">
-        <LanguageProvider>{children}</LanguageProvider>
+        <LanguageProvider>
+          <AccessibilityProvider>
+            <SkipLink />
+            {children}
+            <AccessibilityWidget />
+          </AccessibilityProvider>
+        </LanguageProvider>
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}

@@ -11,15 +11,17 @@ import {
 
 export default function Home() {
   return (
-    <main>
+    <>
       <PatternBackground />
       <LanguageSwitcher />
-      <Hero />
-      <About />
-      <Banner />
-      <Members />
-      <Gallery />
+      <main id="main">
+        <Hero />
+        <About />
+        <Banner />
+        <Members />
+        <Gallery />
+      </main>
       <Contact />
-    </main>
+    </>
   );
 }

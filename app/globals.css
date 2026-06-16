@@ -91,3 +91,119 @@ body {
 .animate-float-slow {
   animation: float-slow 14s ease-in-out infinite;
 }
+
+/* ============================================================
+ * Accessibility adaptations — toggled by classes on <html>
+ * Each rule corresponds to a switch in the accessibility widget
+ * ============================================================ */
+
+/* Visible focus indicator — applied to every interactive element by default
+ * (WCAG 2.4.7), made bolder when the user opts in to focusHighlight. */
+:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+  border-radius: 4px;
+}
+
+html.a11y-focusHighlight :focus-visible {
+  outline: 4px solid #fff200;
+  outline-offset: 4px;
+  box-shadow: 0 0 0 6px rgba(0, 0, 0, 0.85);
+}
+
+/* Larger text — scale the root font 1.25x, every rem-based size follows */
+html.a11y-largeText {
+  font-size: 109%;
+}
+
+/* High contrast mode */
+html.a11y-highContrast,
+html.a11y-highContrast body {
+  background: #000 !important;
+  color: #fff !important;
+}
+html.a11y-highContrast .text-psy {
+  background: none !important;
+  -webkit-text-fill-color: #ffeb3b !important;
+  color: #ffeb3b !important;
+}
+html.a11y-highContrast a,
+html.a11y-highContrast button {
+  color: #ffeb3b !important;
+  border-color: #ffeb3b !important;
+}
+html.a11y-highContrast img:not([data-a11y-keep]) {
+  filter: grayscale(40%) contrast(1.2);
+}
+
+/* Underline every link */
+html.a11y-underlineLinks a {
+  text-decoration: underline !important;
+  text-underline-offset: 3px;
+}
+
+/* Swap decorative fonts for the plain sans-serif throughout */
+html.a11y-readableFont,
+html.a11y-readableFont * {
+  font-family: var(--font-heebo), Arial, Helvetica, sans-serif !important;
+}
+
+/* Pause every animation, transition, and the looping background video */
+html.a11y-pauseAnimations *,
+html.a11y-pauseAnimations *::before,
+html.a11y-pauseAnimations *::after {
+  animation-duration: 0s !important;
+  animation-iteration-count: 1 !important;
+  transition-duration: 0s !important;
+  scroll-behavior: auto !important;
+}
+html.a11y-pauseAnimations video {
+  display: none;
+}
+
+/* Larger click targets — bumps padding & minimum hit area */
+html.a11y-largerTargets a,
+html.a11y-largerTargets button,
+html.a11y-largerTargets [role="button"] {
+  min-height: 44px;
+  min-width: 44px;
+  padding: 0.6rem 1rem;
+}
+
+/* Hide images and decorative graphics */
+html.a11y-hideImages img,
+html.a11y-hideImages video,
+html.a11y-hideImages svg {
+  visibility: hidden;
+}
+
+/* Mute everything */
+html.a11y-muteSound audio,
+html.a11y-muteSound video {
+  /* Muting is enforced in JS too (video.muted = true) — this is a CSS hint */
+}
+
+/* Respect prefers-reduced-motion at the system level too */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* Screen-reader-only utility (used for hidden landmark labels) */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
