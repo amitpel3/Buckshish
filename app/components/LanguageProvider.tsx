@@ -2,7 +2,6 @@
 
 import React, { createContext, useState, useContext, ReactNode } from 'react';
 
-// 1. Define the interface for the dictionary structure
 export interface TranslationKeys {
   dir: 'rtl' | 'ltr';
   heroEyebrow: string;
@@ -15,20 +14,38 @@ export interface TranslationKeys {
   bannerAlt: string;
   aboutTitle: string;
   langSwitcherAria: string;
-  // If you have more keys, TypeScript will let you know here, 
-  // or you can add a dynamic index signature like below to allow flexibility:
+  aboutBody: {
+    lead: string;
+    tag1: string;
+    mid1: string;
+    tag2: string;
+    mid2: string;
+    tag3: string;
+    tail: string;
+  };
+  aboutLocation: string;
+  membersTitle: string;
+  memberNames: Record<string, string>;
+  memberRoles: Record<string, string>;
+  galleryTitle: string;
+  galleryItemAria: (index: number) => string;
+  galleryAlt: (index: number) => string;
+  lightboxAria: string;
+  lightboxAlt: string;
+  closeAria: string;
+  contactTitle: string;
+  socialLabels: Record<string, string>;
+  copyright: string;
+  madeBy: string;
   [key: string]: any; 
 }
 
-// 2. Define the structure of the context state
 interface LanguageContextType {
   lang: string;
   setLang: (lang: string) => void;
   t: TranslationKeys;
 }
 
-// 3. Define your actual translations data
-// (Make sure your exact Hebrew and English text matches what you had before)
 const translations: Record<string, TranslationKeys> = {
   he: {
     dir: 'rtl',
@@ -42,6 +59,36 @@ const translations: Record<string, TranslationKeys> = {
     bannerAlt: 'תמונת קאבר של הלהקה',
     aboutTitle: 'עלינו',
     langSwitcherAria: 'שנה שפה',
+    aboutBody: {
+      lead: 'מוזיקה שמחברת',
+      tag1: 'אנשים',
+      mid1: 'דרך',
+      tag2: 'קצב',
+      mid2: 'עם המון',
+      tag3: 'נשמה',
+      tail: '.',
+    },
+    aboutLocation: 'נהריה, ישראל',
+    membersTitle: 'חברי הלהקה',
+    memberNames: {}, 
+    memberRoles: {}, 
+    galleryTitle: 'גלריה',
+    galleryItemAria: (i) => `תמונה ${i} בגלריה`,
+    galleryAlt: (i) => `תמונה ${i}`,
+    lightboxAria: 'תצוגת תמונה מוגדלת',
+    lightboxAlt: 'תמונה מוגדלת',
+    closeAria: 'סגור',
+    contactTitle: 'צור קשר',
+    socialLabels: {
+      instagram: 'אינסטגרם',
+      facebook: 'פייסבוק',
+      youtube: 'יוטיוב',
+      spotify: 'ספוטיפיי',
+      soundcloud: 'סאונדקלאוד',
+      email: 'אימייל',
+    },
+    copyright: 'כל הזכויות שמורות',
+    madeBy: 'נבנה ע״י',
   },
   en: {
     dir: 'ltr',
@@ -55,10 +102,39 @@ const translations: Record<string, TranslationKeys> = {
     bannerAlt: 'Band cover image',
     aboutTitle: 'About Us',
     langSwitcherAria: 'Change language',
+    aboutBody: {
+      lead: 'Music that connects',
+      tag1: 'people',
+      mid1: 'through',
+      tag2: 'rhythm',
+      mid2: 'with lots of',
+      tag3: 'soul',
+      tail: '.',
+    },
+    aboutLocation: 'Nahariya, Israel',
+    membersTitle: 'Band Members',
+    memberNames: {},
+    memberRoles: {},
+    galleryTitle: 'Gallery',
+    galleryItemAria: (i) => `Gallery item ${i}`,
+    galleryAlt: (i) => `Image ${i}`,
+    lightboxAria: 'Expanded image view',
+    lightboxAlt: 'Expanded image',
+    closeAria: 'Close',
+    contactTitle: 'Contact Us',
+    socialLabels: {
+      instagram: 'Instagram',
+      facebook: 'Facebook',
+      youtube: 'YouTube',
+      spotify: 'Spotify',
+      soundcloud: 'SoundCloud',
+      email: 'Email',
+    },
+    copyright: 'All rights reserved',
+    madeBy: 'Made by',
   },
 };
 
-// 4. Initialize the context with an explicit type to prevent type inference lock
 const LanguageContext = createContext<LanguageContextType | undefined>(undefined);
 
 interface LanguageProviderProps {
@@ -66,10 +142,7 @@ interface LanguageProviderProps {
 }
 
 export function LanguageProvider({ children }: LanguageProviderProps) {
-  // Default to Hebrew ('he') or English ('en') depending on your target primary audience
   const [lang, setLang] = useState<string>('he'); 
-
-  // Safely fallback to Hebrew if the selected language key doesn't exist
   const currentTranslation = translations[lang] || translations['he'];
 
   return (
@@ -81,11 +154,10 @@ export function LanguageProvider({ children }: LanguageProviderProps) {
   );
 }
 
-// 5. Custom hook for easy consumption across components
 export function useLang() {
   const context = useContext(LanguageContext);
   if (context === undefined) {
-    throw new Error('useLanguage must be used within a LanguageProvider');
+    throw new Error('useLang must be used within a LanguageProvider');
   }
   return context;
 }
