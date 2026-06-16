@@ -82,7 +82,7 @@ export function LanguageProvider({ children }: LanguageProviderProps) {
 }
 
 // 5. Custom hook for easy consumption across components
-export function useLanguage() {
+export function useLang() {
   const context = useContext(LanguageContext);
   if (context === undefined) {
     throw new Error('useLanguage must be used within a LanguageProvider');
