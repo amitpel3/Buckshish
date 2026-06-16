@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useRef, useState } from "react";
 import { SOCIALS } from "../data";
 import { useLang } from "./LanguageProvider";
 
@@ -9,15 +9,6 @@ function BackgroundVideo() {
   const { t } = useLang();
   const videoRef = useRef<HTMLVideoElement>(null);
   const [playing, setPlaying] = useState(true);
-
-  // Honor the OS-level prefers-reduced-motion setting on first paint
-  useEffect(() => {
-    const mql = window.matchMedia("(prefers-reduced-motion: reduce)");
-    if (mql.matches && videoRef.current) {
-      videoRef.current.pause();
-      setPlaying(false);
-    }
-  }, []);
 
   const toggle = () => {
     const v = videoRef.current;
